@@ -72,3 +72,22 @@ export async function deleteNote(req, res) {
         });
     }
 }
+
+export async function getNoteById(req, res) {
+    try {
+        const noteId = req.params.id;
+
+        const note = await Note.findById(noteId);
+
+        if (!note) return res.status(404).json({
+            message: "Note not found!",
+        });
+
+        res.status(200).json(note);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
+}
