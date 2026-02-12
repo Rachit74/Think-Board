@@ -1,8 +1,9 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
+const router = useRouter();
 const route = useRoute();
 const id = route.params.id;
 
@@ -21,6 +22,22 @@ const fetchNote = async () => {
     }
 }
 
+const title = ref('');
+const content = ref('');
+
+const updateNote = async () => {
+    try {
+        await axios.put(`http://localhost:8000/api/notes/${id}`, {
+            title: title.value,
+            content: content.value,
+        });
+        await fetchNote();
+        router.push(`/note/${id}`);
+    } catch (err) {
+        error.value = err;
+    }
+}
+
 onMounted(fetchNote);
 
 </script>
@@ -36,5 +53,14 @@ onMounted(fetchNote);
                 <p>{{ note.content }}</p>
             </div>
         </div>
+        <!--  -->
+        <!-- edit note form -->
+         <div>
+            <form @submit.prevent="updateNote">
+                <input type="text" placeholder="Title" v-model="title">
+                <textarea v-model="content" placeholder="Content"></textarea>
+                <button type="submit">Save</button>
+            </form>
+         </div>
     </div>
 </template>
