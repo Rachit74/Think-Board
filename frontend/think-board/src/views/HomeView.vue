@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import Note from '@/componenets/Note.vue';
 
 const notes = ref([]);
 const loading = ref(true);
@@ -17,22 +18,39 @@ const getNotes = async () => {
     }
 }
 
+const deleteNote = async (id) => {
+    try {
+        await axios.delete(`http://localhost:8000/api/notes/${id}`);
+        notes.value = notes.value.filter(note => note._id !== id);
+    } catch (err) {
+        error.value = err
+    }
+}
+
 onMounted(getNotes);
 
 </script>
 
 <template>
-    <div>
-        <h1>Home Page</h1>
-        <p v-if="loading">Loading...</p>
-        <p v-else-if="error">{{ error }}</p>
-        <div v-else v-for="note in notes" :key="note._id">
-            <h2>{{ note.title }}</h2>
-            <p>{{ note.content }}</p>
-            <RouterLink :to="`/note/${note._id}`">Edit</RouterLink>
-            |
-            <RouterLink :to="`/delete/${note._id}`">Delete</RouterLink>
-            {{ note._id }}
-        </div>
+ <div class="container mt-4">
+    <h1 class="mb-4">Home Page</h1>
+
+    <p v-if="loading" class="text-muted">Loading...</p>
+    <p v-else-if="error" class="text-danger">
+      {{ error.message }}
+    </p>
+
+    <div v-else class="row">
+      <div
+        v-for="note in notes"
+        :key="note._id"
+        class="col-12 col-md-4"
+      >
+        <Note
+          :note="note"
+          @delete="deleteNote"
+        />
+      </div>
     </div>
+  </div>
 </template>

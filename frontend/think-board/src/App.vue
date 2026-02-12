@@ -1,10 +1,10 @@
-<script setup></script>
+<script setup>
+import Navbar from './componenets/Navbar.vue';
+
+</script>
 
 <template>
-  <h1>Think Board</h1>
-  <p>
-
-  </p>
+  <Navbar />
 
   <router-view />
 </template>

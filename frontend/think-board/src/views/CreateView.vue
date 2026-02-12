@@ -17,7 +17,7 @@ const createNote = async () => {
       title: title.value,
       content: content.value
     })
-    router.push('/')  // redirect home after creating
+    router.push('/')
   } catch (err) {
     error.value = 'Failed to create note'
   } finally {
@@ -27,15 +27,47 @@ const createNote = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Create Page</h1>
-    <p v-if="error">{{ error }}</p>
-    <form @submit.prevent="createNote">
-      <input v-model="title" type="text" placeholder="Title" />
-      <textarea v-model="content" placeholder="Content"></textarea>
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Creating...' : 'Create Note' }}
-      </button>
-    </form>
+  <div class="container mt-4">
+    <h1 class="mb-4">Create Note</h1>
+
+    <div v-if="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <form @submit.prevent="createNote">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input
+              v-model="title"
+              type="text"
+              class="form-control"
+              placeholder="Enter title"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Content</label>
+            <textarea
+              v-model="content"
+              class="form-control"
+              rows="5"
+              placeholder="Enter content"
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="loading"
+          >
+            {{ loading ? 'Creating...' : 'Create Note' }}
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
